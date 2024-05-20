@@ -22,7 +22,7 @@ def get_chatgpt_response(user_input):
         messages=[
         {
             "role": "user",
-            "content": "Create a Linux shell script to " + user_input + ". Just return shell script with out explanations",
+            "content": "Create a Linux shell script to " + user_input + ". only shell script",
         }
     ],
     model="gpt-3.5-turbo",
@@ -46,22 +46,24 @@ def run_shell_script(filename="script.sh"):
 
 def extract_code(api_output):
     # Regular expression pattern to match code blocks enclosed in triple backticks
-    pattern = r'```(.*?)```'
+    pattern = r'```bash(.*?)```'
     
     # Find all code blocks using the pattern
     code_blocks = re.findall(pattern, api_output, re.DOTALL)
     
     # Join all code blocks into a single string
-    extracted_code = '\n\n'.join(code_blocks)
+    extracted_code = code_blocks[0]
     
     return extracted_code
 
 def main():
     user_input = get_user_input()
-    script_content = extract_code(get_chatgpt_response(user_input))
-    #create_shell_script(script_content)
+    response=get_chatgpt_response(user_input)
+    print(response)
+    script_content = extract_code(response)
+    create_shell_script(script_content)
     print(f"Generated script:\n{script_content}")
-    #run_shell_script()
+    run_shell_script()
 
 if __name__ == "__main__":
     main()
