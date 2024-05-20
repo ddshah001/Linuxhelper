@@ -21,8 +21,13 @@ def get_chatgpt_response(user_input):
     response = client.chat.completions.create(
         messages=[
         {
+            "role": "system",
+            "content": "You are a shell script writer, only provide shell script with out explanations"
+
+        },
+        {
             "role": "user",
-            "content": "Create a Linux shell script to " + user_input + ". only shell script",
+            "content": "Create a Linux shell script to " + user_input + ".",
         }
     ],
     model="gpt-3.5-turbo",
@@ -50,9 +55,11 @@ def extract_code(api_output):
     
     # Find all code blocks using the pattern
     code_blocks = re.findall(pattern, api_output, re.DOTALL)
+    if(len(code_blocks)==0):
+        extracted_code = api_output
+    else:
+        extracted_code = code_blocks[0]
     
-    # Join all code blocks into a single string
-    extracted_code = code_blocks[0]
     
     return extracted_code
 
@@ -61,9 +68,9 @@ def main():
     response=get_chatgpt_response(user_input)
     print(response)
     script_content = extract_code(response)
-    create_shell_script(script_content)
+    #create_shell_script(script_content)
     print(f"Generated script:\n{script_content}")
-    run_shell_script()
+    #run_shell_script()
 
 if __name__ == "__main__":
     main()
