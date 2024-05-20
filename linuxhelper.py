@@ -2,6 +2,15 @@ from openai import OpenAI
 import os
 import configparser
 import re
+import argparse
+
+parser = argparse.ArgumentParser(description='A Linux shell script helper tool.')
+parser.add_argument('-g', '--generate', action='store_true', help='Only generate shell script')
+parser.add_argument('-v', '--verbose', action='store_true', help='Show AI generated output and exported version of script')
+
+def getarg():
+    args = parser.parse_args()
+    return args
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -22,7 +31,7 @@ def get_chatgpt_response(user_input):
         messages=[
         {
             "role": "system",
-            "content": "You are a shell script writer, only provide shell script with out explanations"
+            "content": "You are a shell script writer, only provide shell script without explanations"
 
         },
         {
@@ -33,12 +42,6 @@ def get_chatgpt_response(user_input):
     model="gpt-3.5-turbo",
     )
 
-    #response = openai.Completion.create(
-    #    model="text-davinci-003",
-    #    prompt=f"Create a Linux shell script to {user_input}",
-    #    max_tokens=200,
-    #    temperature=0.5
-    #)
     return response.choices[0].message.content
 
 def create_shell_script(content, filename="script.sh"):
@@ -66,11 +69,14 @@ def extract_code(api_output):
 def main():
     user_input = get_user_input()
     response=get_chatgpt_response(user_input)
-    print(response)
+    if(getarg.verbose == True):
+        print("AI's Generated Response")
+        print(response)
+        print(f"Generated script:\n{script_content}")
     script_content = extract_code(response)
     create_shell_script(script_content)
-    print(f"Generated script:\n{script_content}")
-    run_shell_script()
+    if(getarg.generate == False):
+        run_shell_script()
 
 if __name__ == "__main__":
     main()
