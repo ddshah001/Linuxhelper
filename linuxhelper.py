@@ -5,7 +5,7 @@ import re
 import argparse
 
 parser = argparse.ArgumentParser(description='A Linux shell script helper tool.')
-parser.add_argument('-g', '--generate', action='store_true', help='Only generate shell script')
+parser.add_argument('-g', '--generate', action='store_true', help='Only generate shell script', default=False)
 parser.add_argument('-v', '--verbose', action='store_true', help='Show AI generated output and exported version of script', default=False)
 
 def getarg():
