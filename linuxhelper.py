@@ -68,9 +68,9 @@ def main():
     response=get_chatgpt_response(user_input)
     print(response)
     script_content = extract_code(response)
-    #create_shell_script(script_content)
+    create_shell_script(script_content)
     print(f"Generated script:\n{script_content}")
-    #run_shell_script()
+    run_shell_script()
 
 if __name__ == "__main__":
     main()
