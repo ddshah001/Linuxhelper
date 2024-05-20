@@ -21,7 +21,7 @@ def get_chatgpt_response(user_input):
         messages=[
         {
             "role": "user",
-            "content": "Create a Linux shell script to " + user_input,
+            "content": "Create a Linux shell script to " + user_input + ". Just return shell script with out explanations",
         }
     ],
     model="gpt-3.5-turbo",
@@ -46,9 +46,9 @@ def run_shell_script(filename="script.sh"):
 def main():
     user_input = get_user_input()
     script_content = get_chatgpt_response(user_input)
-    create_shell_script(script_content)
+    #create_shell_script(script_content)
     print(f"Generated script:\n{script_content}")
-    run_shell_script()
+    #run_shell_script()
 
 if __name__ == "__main__":
     main()
