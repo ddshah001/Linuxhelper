@@ -35,13 +35,20 @@ def get_chatgpt_response(user_input):
     #)
     return response.choices[0].message.content
 
+def create_shell_script(content, filename="script.sh"):
+    with open(filename, "w") as file:
+        file.write(content)
+    os.chmod(filename, 0o755)  # Make the file executable
+
+def run_shell_script(filename="script.sh"):
+    os.system(f"./{filename}")
+
 def main():
     user_input = get_user_input()
     script_content = get_chatgpt_response(user_input)
-    print(script_content)
-    #create_shell_script(script_content)
-    #print(f"Generated script:\n{script_content}")
-    #run_shell_script()
+    create_shell_script(script_content)
+    print(f"Generated script:\n{script_content}")
+    run_shell_script()
 
 if __name__ == "__main__":
     main()
