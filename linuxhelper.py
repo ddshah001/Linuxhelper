@@ -69,13 +69,13 @@ def extract_code(api_output):
 def main():
     user_input = get_user_input()
     response=get_chatgpt_response(user_input)
-    if(getarg.verbose == True):
+    if(getarg().verbose == True):
         print("AI's Generated Response")
         print(response)
         print(f"Generated script:\n{script_content}")
     script_content = extract_code(response)
     create_shell_script(script_content)
-    if(getarg.generate == False):
+    if(getarg().generate == False):
         run_shell_script()
 
 if __name__ == "__main__":
