@@ -1,6 +1,7 @@
 from openai import OpenAI
 import os
 import configparser
+import re
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -43,9 +44,21 @@ def create_shell_script(content, filename="script.sh"):
 def run_shell_script(filename="script.sh"):
     os.system(f"./{filename}")
 
+def extract_code(api_output):
+    # Regular expression pattern to match code blocks enclosed in triple backticks
+    pattern = r'```(.*?)```'
+    
+    # Find all code blocks using the pattern
+    code_blocks = re.findall(pattern, api_output, re.DOTALL)
+    
+    # Join all code blocks into a single string
+    extracted_code = '\n\n'.join(code_blocks)
+    
+    return extracted_code
+
 def main():
     user_input = get_user_input()
-    script_content = get_chatgpt_response(user_input)
+    script_content = extract_code(get_chatgpt_response(user_input))
     #create_shell_script(script_content)
     print(f"Generated script:\n{script_content}")
     #run_shell_script()
