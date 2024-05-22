@@ -5,8 +5,8 @@ import re
 import argparse
 
 parser = argparse.ArgumentParser(description='A Linux shell script helper tool.')
-parser.add_argument('-g', '--generate', action='store_true', help='Only generate shell script', default=False)
 parser.add_argument('-v', '--verbose', action='store_true', help='Show AI generated output and exported version of script', default=False)
+parser.add_argument('-r', '--run', action='store_true', help='Run shell script but use this option with caution', default=False)
 
 def getarg():
     args = parser.parse_args()
@@ -75,8 +75,12 @@ def main():
         print(f"Generated script:\n{script_content}")
     script_content = extract_code(response)
     create_shell_script(script_content)
-    if(getarg().generate == False):
-        run_shell_script()
+    if(getarg().run == True):
+        print(f"Generated script:\n{script_content}")
+        print("-------------------------------------------------------------------")
+        accept = input("Please validate above scipt, enter yes to confirm and run: ")
+        if(accept == "yes"):
+            run_shell_script()
 
 if __name__ == "__main__":
     main()
