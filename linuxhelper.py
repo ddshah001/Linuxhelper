@@ -3,6 +3,7 @@ import os
 import configparser
 import re
 import argparse
+import platform
 
 parser = argparse.ArgumentParser(description='A Linux shell script helper tool.')
 parser.add_argument('-v', '--verbose', action='store_true', help='Show AI generated output and exported version of script', default=False)
@@ -12,9 +13,22 @@ def getarg():
     args = parser.parse_args()
     return args
 
+def getOSdetails():
+    os_name = platform.system()
+    os_release = platform.release()
+    os_version = platform.version()
+    distro_name = "Unknown"
+    if os.path.exists("/etc/os-release"):
+        with open("/etc/os-release") as f:
+            for line in f:
+                if line.startswith("NAME="):
+                    distro_name = line.split("=")[1].strip().strip('"')
+                    break
+
+    return os_name, os_release, os_version, distro_name
+
 config = configparser.ConfigParser()
 config.read("config.ini")
-
 
 # Ensure you have set your OpenAI API key
 client = OpenAI(
@@ -26,12 +40,25 @@ def get_user_input():
     return input("Please enter the task you want to automate with a shell script: ")
 
 def get_chatgpt_response(user_input):
-    #print("Create a Linux shell script to " + user_input)
+    #Get operating system information
+    os_name, os_release, os_version, distro_name = getOSdetails()
+
+    # System Message
+    system_message = f"""
+    You are a shell script writer, only provide shell script without explanations
+
+    Consider below operating system details while writing shell script:
+    os_name: {os_name}
+    os_release: {os_release}
+    os_version: {os_version}
+    distro_name: {distro_name}
+    """
+    #print(system_message)
     response = client.chat.completions.create(
         messages=[
         {
             "role": "system",
-            "content": "You are a shell script writer, only provide shell script without explanations"
+            "content": system_message
 
         },
         {
